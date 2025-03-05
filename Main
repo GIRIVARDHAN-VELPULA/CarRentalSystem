@@ -1,0 +1,14 @@
+package com.tcs;
+
+public class Main {
+    public static void main(String[] args) {
+        Car car1 = new Car("C001", "TATA", "Indica", 1000);
+        Car car2 = new Car("C002", "TOYOTA", "Innova", 1500);
+        Car car3 = new Car("C003", "BMW", "Xyla", 10000);
+        RentalSystem rs = new RentalSystem();
+        rs.addCar(car1);
+        rs.addCar(car2);
+        rs.addCar(car3);
+        rs.menu();
+    }
+}
