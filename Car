@@ -1,256 +1,48 @@
 package com.tcs;
 
-
-import org.w3c.dom.ls.LSOutput;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
-class Car
-{
+/**
+ * Represents a car in the rental system.
+ */
+public class Car {
     private String id;
     private String brand;
     private String model;
     private double basePrice;
     private boolean isAvailable;
-    public Car(String id,String brand,String model,double basePrice)
-    {
-        this.id=id;
-        this.brand=brand;
-        this.model=model;
-        this.basePrice=basePrice;
-        isAvailable=true;
+
+    public Car(String id, String brand, String model, double basePrice) {
+        this.id = id;
+        this.brand = brand;
+        this.model = model;
+        this.basePrice = basePrice;
+        isAvailable = true;
     }
-    public String getId()
-    {
+
+    public String getId() {
         return id;
     }
-    public String getBrand()
-    {
+
+    public String getBrand() {
         return brand;
     }
-    public String getModel()
-    {
+
+    public String getModel() {
         return model;
     }
-    public double calculatePrice(int noOfDays)
-    {
-        return basePrice*noOfDays;
+
+    public double calculatePrice(int noOfDays) {
+        return basePrice * noOfDays;
     }
-    public boolean isAvailable()
-    {
+
+    public boolean isAvailable() {
         return isAvailable;
     }
-    public void rent()
-    {
-        isAvailable=false;
-    }
-    public void returnCar()
-    {
-        isAvailable=true;
-    }
-}
 
-class Customer
-{
-    private String customerId;
-    private String customerName;
-    public Customer(String customerId,String customerName)
-    {
-        this.customerId=customerId;
-        this.customerName=customerName;
-    }
-    public String getCustomerId()
-    {
-        return customerId;
-    }
-    public String getCustomerName()
-    {
-        return customerName;
-    }
-}
-class Rental
-{
-    private Car car;
-    private Customer customer;
-    private int rentalDays;
-    public Rental(Car car,Customer customer,int rentalDays)
-    {
-        this.car=car;
-        this.customer=customer;
-        this.rentalDays=rentalDays;
-    }
-    public Car getCar()
-    {
-        return car;
-    }
-    public Customer getCustomer()
-    {
-        return customer;
-    }
-    public int getRentalDays()
-    {
-        return rentalDays;
-    }
-}
-
-class RentalSystem
-{
-    List<Car> cars;
-    List<Customer> customers;
-    List<Rental> rentals;
-    public RentalSystem()
-    {
-        cars=new ArrayList();
-        customers=new ArrayList();
-        rentals=new ArrayList();
-    }
-    public void addCar(Car car)
-    {
-        cars.add(car);
-    }
-    public void addCustomer(Customer customer)
-    {
-        customers.add(customer);
-    }
-    public void addRentals(Rental rental)
-    {
-        rentals.add(rental);
-    }
-    public void menu()
-    {
-        Scanner sc=new Scanner(System.in);
-        while(true)
-        {
-            System.out.println(" ===== WELCOME TO CAR RENTALSYSTEMS ===== ");
-            System.out.println();
-            System.out.println();
-            System.out.println("1.Rent a Car");
-            System.out.println("2.Return a Car");
-            System.out.println("3.Exit");
-            System.out.println();
-            System.out.println("Enter your Choice : ");
-            int choice = sc.nextInt();
-            sc.nextLine();
-
-            if(choice == 1)
-            {
-                System.out.println(" ===== Rent a Car ===== ");
-                System.out.println();
-                System.out.println("Enter your Name : ");
-                String customerName=sc.nextLine();
-                System.out.println();
-                System.out.println("Cars Available : ");
-                System.out.println();
-                //System.out.println("Car ID\t Car Brand\t CarModel");
-                for(Car c : cars)
-                {
-                    if(c.isAvailable())
-                    {
-                        System.out.println(c.getId()+"  "+c.getBrand()+" "+c.getModel());
-                    }
-                }
-                System.out.println("Enter the Car ID you want to rent : ");
-                String carId=sc.nextLine();
-                System.out.println("Enter number of days you want to rent : ");
-                int days=sc.nextInt();
-                sc.nextLine();
-                Car selectedCar=null;
-                for(Car car : cars)
-                {
-                    if(car.getId().equals(carId) && car.isAvailable())
-                    {
-                        selectedCar=car;
-                        break;
-                    }
-                }
-                if(selectedCar!=null)
-                {
-                    Customer customer=new Customer("cus"+(customers.size()+1),customerName);
-                    System.out.println("Customer Id : "+customer.getCustomerId());
-                    System.out.println("Customer Name : "+customer.getCustomerName());
-                    System.out.println("Selected Car : "+selectedCar.getBrand()+" "+selectedCar.getModel());
-                    System.out.println("Number of days for Rent : "+days);
-                    System.out.println("Total amount : "+selectedCar.calculatePrice(days));
-                    System.out.println();
-                    System.out.println("Please Confirm your Selection (Y/N) ");
-                    String selection=sc.nextLine();
-                    if(selection.equalsIgnoreCase("y"))
-                    {
-                        System.out.println("Car Rented Successfully...!");
-                        selectedCar.rent();
-                        customers.add(customer);
-                        rentals.add(new Rental(selectedCar,customer,days));
-                    }
-                    else
-                    {
-                        System.out.println("Car Rented Cancelled...!");
-                    }
-                }
-                else {
-                    System.out.println("Please enter valid Car Id..");
-                }
-            }
-            else if(choice==2)
-            {
-                System.out.println(" ===== Return a Car ===== ");
-                System.out.println();
-                System.out.println("Enter the car Id you want to return : ");
-                String carId=sc.nextLine();
-                Car returncar=null;
-                for(Car car : cars)
-                {
-                    if((car.getId()).equals(carId) && !car.isAvailable())
-                    {
-                        returncar=car;
-                        break;
-                    }
-                }
-               Customer preCustomer=null;
-                for(Rental rental : rentals)
-                {
-                    if((rental.getCar()).equals(returncar))
-                    {
-                        preCustomer=rental.getCustomer();
-                        rentals.remove(rental);
-                        break;
-                    }
-                }
-                if(preCustomer!=null) {
-                    System.out.println("Car Returned Successfully by " + preCustomer.getCustomerName());
-                    returncar.returnCar();
-                }
-                else
-                {
-                    System.out.println("Car is not rented...");
-                }
-
-            }
-           else if(choice==3)
-            {
-                break;
-            }
-            else
-            {
-                System.out.println("Please enter a valid choice...");
-            }
-        }
-        System.out.println("Thank you for using CAR RENTALSYSTEM...");
+    public void rent() {
+        isAvailable = false;
     }
 
-}
-
-public class Main
-{
-    public static void main(String[] args) {
-        Car car1=new Car("C001","TATA","Indica",1000);
-        Car car2=new Car("C002","TOYOTA","Innova",1500);
-        Car car3=new Car("C003","BMW","Xyla",10000);
-        RentalSystem rs=new RentalSystem();
-        rs.addCar(car1);
-        rs.addCar(car2);
-        rs.addCar(car3);
-        rs.menu();
+    public void returnCar() {
+        isAvailable = true;
     }
 }
